@@ -1,0 +1,35 @@
+name: Send release notification
+
+on:
+  workflow_call:
+    inputs:
+      succeeded:
+        type: boolean
+        required: true
+      repository:
+        type: string
+        required: true
+      version:
+        type: string
+        required: false
+        default: ''
+      run-id:
+        type: string
+        required: true
+  
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification
+        uses: distributhor/workflow-webhook@v3
+        env:
+          webhook_url: ${{ secrets.BOT_WEBHOOK_URL }}
+          webhook_secret: ${{ secrets.BOT_WEBHOOK_SECRET }}
+          data: |
+            { 
+              "succeeded": ${{ inputs.succeeded }},
+              "repository": "${{ inputs.repository }}",
+              "version": "${{ inputs.version }}",
+              "runId": "${{ inputs.run-id }}"
+            }
