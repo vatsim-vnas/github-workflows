@@ -3,6 +3,9 @@ name: Send release notification
 on:
   workflow_call:
     inputs:
+      bot_webhook_url:
+        type: string
+        required: true
       succeeded:
         type: boolean
         required: true
@@ -24,7 +27,7 @@ jobs:
       - name: Send notification
         uses: distributhor/workflow-webhook@v3
         env:
-          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          webhook_url: ${{ inputs.bot_webhook_url }}
           data: |
             { 
               "succeeded": ${{ inputs.succeeded }},
